@@ -1,0 +1,11 @@
+semi: false
+printWidth: 120
+useTabs: true
+singleQuote: true
+overrides:
+  - files: '*.ejs'
+    parser: html
+
+  - files: 'package.json'
+    useTabs: false
+    tabWidth: 2
