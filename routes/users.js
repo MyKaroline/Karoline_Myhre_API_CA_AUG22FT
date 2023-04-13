@@ -8,11 +8,6 @@ const userService = new UserService(db)
 
 const pbkdf2 = util.promisify(crypto.pbkdf2)
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-	res.jsend.success('respond with a resource')
-})
-
 router.post('/', async (req, res, next) => {
 	const { name, email, password } = req.body
 	try {

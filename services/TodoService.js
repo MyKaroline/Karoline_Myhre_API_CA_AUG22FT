@@ -4,6 +4,10 @@ class TodoService {
 		this.Todo = db.Todo
 	}
 
+	async get(id, userId) {
+		return this.Todo.findOne({ where: { id, UserId: userId } })
+	}
+
 	async getAll(userId) {
 		return this.Todo.findAll({ where: { UserId: userId } })
 	}

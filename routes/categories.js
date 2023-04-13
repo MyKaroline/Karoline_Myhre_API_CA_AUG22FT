@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../models')
-const TodoService = require('../services/TodoService')
-const todoService = new TodoService(db)
+const CategoryService = require('../services/CategoryService')
+const categoryService = new CategoryService(db)
 const jwt = require('jsonwebtoken')
 
 /* GET users listing. */
@@ -10,9 +10,9 @@ router.get('/', async (req, res, next) => {
 	try {
 		const token = req.headers.authorization?.split(' ')[1]
 		if (token) {
-			const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
-			const todos = await todoService.getAll(decodedToken.id)
-			res.jsend.success(todos)
+			jwt.verify(token, process.env.TOKEN_SECRET)
+			const categories = await categoryService.getAll()
+			res.jsend.success(categories)
 		} else {
 			res.jsend.fail({ result: 'No token provided' })
 		}
@@ -25,9 +25,9 @@ router.post('/', async (req, res, next) => {
 	try {
 		const token = req.headers.authorization?.split(' ')[1]
 		if (token) {
-			const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
-			const { name, CategoryId } = req.body
-			const result = await todoService.create(name, CategoryId, decodedToken.id)
+			jwt.verify(token, process.env.TOKEN_SECRET)
+			const { name } = req.body
+			const result = await categoryService.create(name)
 			res.jsend.success(result)
 		} else {
 			res.jsend.fail({ result: 'No token provided' })
@@ -42,11 +42,11 @@ router.patch('/:id', async (req, res, next) => {
 		const id = Number.parseInt(req.params.id)
 		const token = req.headers.authorization?.split(' ')[1]
 		if (token) {
-			const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
-			const todo = await todoService.get(id, decodedToken.id)
-			if (!todo) return res.jsend.fail({ result: 'Todo not found' })
-			const { name, CategoryId } = req.body
-			const result = await todoService.update(id, decodedToken.id, name, CategoryId)
+			jwt.verify(token, process.env.TOKEN_SECRET)
+			const category = await categoryService.get(id)
+			if (!category) return res.jsend.fail({ result: 'Category not found' })
+			const { name } = req.body
+			const result = await categoryService.update(id, name)
 			res.jsend.success(result)
 		} else {
 			res.jsend.fail({ result: 'No token provided' })
@@ -61,10 +61,10 @@ router.delete('/:id', async (req, res, next) => {
 		const id = Number.parseInt(req.params.id)
 		const token = req.headers.authorization?.split(' ')[1]
 		if (token) {
-			const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
-			const todo = await todoService.get(id, decodedToken.id)
-			if (!todo) return res.jsend.fail({ result: 'Todo not found' })
-			const result = await todoService.delete(id, decodedToken.id)
+			jwt.verify(token, process.env.TOKEN_SECRET)
+			const category = await categoryService.get(id)
+			if (!category) return res.jsend.fail({ result: 'Category not found' })
+			const result = await categoryService.delete(id)
 			res.jsend.success(result)
 		} else {
 			res.jsend.fail({ result: 'No token provided' })
